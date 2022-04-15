@@ -6,6 +6,7 @@ namespace BlockGame
     public static class WorldRenderer
     {
         public static Texture2D tileTexture = Raylib.LoadTexture("..//..//..//tiles.png");
+        public static bool enableLighting = true;
 
         public static void DrawChunk(WorldChunk chunk)
         {
@@ -20,7 +21,7 @@ namespace BlockGame
                         int m8 = t.BgTile % 8;
                         Rectangle srec = new Rectangle(m8 * 16, (t.BgTile / 8) * 16, 16, 16);
                         Rectangle drec = new Rectangle(((chunk.chunkPosX * 16) + x) * 16, ((chunk.chunkPosY * 16) + y) * 16, 16 + 0.002f, 16 + 0.002f);
-                        byte light = (byte)(chunk.lightManager.skylightLevels[x, y] * 8 / 10);
+                        byte light = enableLighting ? (byte)(chunk.lightManager.skylightLevels[x, y] * 8 / 10) : (byte)204;
                         Raylib.DrawTexturePro(tileTexture, srec, drec, Vector2.Zero, 0, new Color(light, light, light, (byte)255));
 
                     }
@@ -32,7 +33,7 @@ namespace BlockGame
                         int m8 = t.FgTile % 8;
                         Rectangle srec = new Rectangle(m8 * 16, (t.FgTile / 8) * 16, 16, 16);
                         Rectangle drec = new Rectangle(((chunk.chunkPosX * 16) + x) * 16, ((chunk.chunkPosY * 16) + y) * 16, 16+0.002f, 16 + 0.002f);
-                        byte light = (byte)(chunk.lightManager.skylightLevels[x, y]);
+                        byte light = enableLighting ? (byte)(chunk.lightManager.skylightLevels[x, y]) : (byte)255;
                         Raylib.DrawTexturePro(tileTexture, srec, drec, Vector2.Zero, 0, new Color(light, light, light, (byte)255));
                     }
                 }

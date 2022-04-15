@@ -110,12 +110,14 @@ namespace BlockGame
         public WorldChunk()
         {
             PopulateTileArray();
+            lightManager = new WorldChunkLightingManager() { chunk = this };
         }
         public WorldChunk(VecInt2 chunkPos)
         {
             chunkPosX = chunkPos.x;
             chunkPosY = chunkPos.y;
             PopulateTileArray();
+            lightManager = new WorldChunkLightingManager() { chunk = this };
         }
     }
 }

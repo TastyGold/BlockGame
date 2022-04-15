@@ -19,6 +19,11 @@
             return new VecInt2(a.x - b.x, a.y - b.y);
         }
 
+        public override string ToString()
+        {
+            return $"<{x}, {y}>";
+        }
+
         public VecInt2(int x, int y)
         {
             this.x = x;

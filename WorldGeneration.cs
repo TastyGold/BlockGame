@@ -49,7 +49,7 @@ namespace BlockGame
             int[] groundLevel = new int[16];
             for (int x = 0; x < 16; x++)
             {
-                groundLevel[x] = GetWorldHeight(x + (chunkPos.x * 16), 0);
+                groundLevel[x] = GetWorldHeight(x + (chunkPos.x * 16) + World.seed, 0);
             }
             for (int y = 0; y < 16; y++)
             {
@@ -78,7 +78,7 @@ namespace BlockGame
                     }
 
                     //Caves
-                    float simplex = GetSimplexPoint(x +(chunkPos.x * 16), y + (chunkPos.y * 16));
+                    float simplex = GetSimplexPoint(x +(chunkPos.x * 16) + World.seed, y + (chunkPos.y * 16));
                     float width = 16;
                     float centre = 128;
                     if (worldY < 250 - worldHeightOffset)

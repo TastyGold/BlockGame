@@ -10,7 +10,7 @@ namespace BlockGame
         public const int worldChunkHeight = 32;
 
         public static Random rand = new Random();
-        public int seed = rand.Next(-10000, 10000);
+        public static int seed = rand.Next(-100000, 100000);
 
         public Dictionary<VecInt2, WorldChunk> chunks = new Dictionary<VecInt2, WorldChunk>();
 
@@ -76,7 +76,15 @@ namespace BlockGame
                     {
                         for (int x = 0; x < 16; x++)
                         {
-                            Raylib.ImageDrawPixel(ref img, x + (pair.Key.x - leftmost) * 16, y + pair.Key.y * 16, colors[pair.Value.tiles[x, y].FgTile]);
+                            Color pixelColor = colors[pair.Value.tiles[x, y].FgTile];
+                            int tempR = pixelColor.r * pair.Value.lightManager.skylightLevels[x, y];
+                            int tempG = pixelColor.g * pair.Value.lightManager.skylightLevels[x, y];
+                            int tempB = pixelColor.b * pair.Value.lightManager.skylightLevels[x, y];
+                            tempR /= 255;
+                            tempG /= 255;
+                            tempB /= 255;
+                            pixelColor = new Color(tempR, tempG, tempB, 255);
+                            Raylib.ImageDrawPixel(ref img, x + (pair.Key.x - leftmost) * 16, y + pair.Key.y * 16, pixelColor);
                         }
                     }
                 }
@@ -112,17 +120,15 @@ namespace BlockGame
                     VecInt2 v = new VecInt2(x, y);
                     WorldChunk c = WorldGeneration.GenerateChunk(v);
                     AddChunk(c);
-                    c.lightManager = new WorldChunkLightingManager() { chunk = c };
-                    c.lightManager.CalculateSkylight();
                 }
             }
-            //for (int i = 0; i < 2; i++)
-            //{
+            for (int i = 0; i < 2; i++)
+            {
                 foreach (WorldChunk chunk in chunks.Values)
                 {
-                    chunk.lightManager.FixSkylightSeams(out _);
+                    chunk.lightManager.CalculateSkylight();
                 }
-            //}
+            }
         }
 
         public void DrawAll()
