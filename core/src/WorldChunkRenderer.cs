@@ -4,23 +4,19 @@ namespace BlockGame
 {
     public class WorldChunkRenderer
     {
-        public RenderTexture2D renderTexture;
+        public WorldChunk chunk;
+        public Texture2D lightmapTexture;
 
-        public void UpdateRenderTexture(WorldChunk c)
+        public void LoadLightmapTexture()
         {
-            Raylib.BeginDrawing();
-            Raylib.BeginTextureMode(renderTexture);
+            Image i = SmoothLightmapGenerator.GetSmoothLightmap(chunk.lightManager.Get18x18Lightmap());
+            lightmapTexture = Raylib.LoadTextureFromImage(i);
+            Raylib.UnloadImage(i);
+        }
 
-            for (int y = 0; y < 16; y++)
-            {
-                for (int x = 0; x < 16; x++)
-                {
-
-                }
-            }
-
-            Raylib.EndTextureMode();
-            Raylib.EndDrawing();
+        public void UnloadLightmapTexture()
+        {
+            Raylib.UnloadTexture(lightmapTexture);
         }
     }
 }

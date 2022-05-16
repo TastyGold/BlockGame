@@ -8,26 +8,10 @@ namespace BlockGame
     public class WorldGeneration
     {
         private static readonly Random rand = new Random();
-        private const float worldScale = 100;
-        private const int worldHeightOffset = 196;
-        private const float worldHeightScale = 0.05f;
+        private const int oceanWaterLevel = 0;
         private const int caveNoiseIterations = 5;
-        private const int groundNoiseInterations = 2;
-        public static int seed;
-        public static int seaLevel = 128;
-
-        public static int GetWorldHeight(float x)
-        {
-            float height = 0;
-            int factor = 1;
-            for (int n = 1; n <= groundNoiseInterations; n++)
-            {
-                height += Noise.CalcPixel1D((int)x * factor, factor / (worldScale + x)) / factor;
-                factor <<= 1;
-            }
-            height += Noise.CalcPixel1D((int)x, 1/worldScale);
-            return worldHeightOffset - (int)(height * worldHeightScale);
-        }
+        public static int Seed => World.seed;
+        public static int seaLevel = 256;
 
         public static int GetWorldHeight(int x, Biome b)
         {
@@ -39,9 +23,9 @@ namespace BlockGame
             float simplex = GetSimplexPoint(x, y);
             float width = 16;
             float centre = 128;
-            if (y < 250 - worldHeightOffset)
+            if (y < seaLevel)
             {
-                width -= (250 - worldHeightOffset - y) / 3;
+                width -= (seaLevel - y) / 3;
                 if (width < 3) width = 0;
             }
 
@@ -65,12 +49,11 @@ namespace BlockGame
         public static WorldChunk GenerateChunk(VecInt2 chunkPos)
         {
             WorldChunk chunk = new WorldChunk(chunkPos);
-
             int[] groundLevel = new int[16];
             for (int x = 0; x < 16; x++)
             {
-                //groundLevel[x] = GetWorldHeight(x + (chunkPos.x * 16) + World.seed);
-                groundLevel[x] = GetWorldHeight(x + (chunkPos.x * 16));
+                chunk.biomeManager.biomeData[x] = WorldBiomeGeneration.GetBiomeWeightsLerped(x + (chunkPos.x * 16), out _, out _).GetAverageValues();
+                groundLevel[x] = GetWorldHeight(x + (chunkPos.x * 16), chunk.biomeManager.biomeData[x]);
             }
             for (int y = 0; y < 16; y++)
             {
@@ -78,35 +61,28 @@ namespace BlockGame
                 {
                     int worldY = y + (chunkPos.y * 16);
 
-                    if (worldY < groundLevel[x])
-                    {
-                        chunk.tiles[x, y].FgTile = 0;
-                    }
-                    else if (worldY == groundLevel[x])
-                    {
-                        chunk.tiles[x, y].FgTile = 1;
-                        chunk.tiles[x, y].BgTile = 2;
-                    }
-                    else if (worldY < groundLevel[x] + 7)
-                    {
-                        chunk.tiles[x, y].FgTile = 2; 
-                        chunk.tiles[x, y].BgTile = 2;
-                    }
-                    else
-                    {
-                        chunk.tiles[x, y].FgTile = 3;
-                        chunk.tiles[x, y].BgTile = 9;
-                    }
-
-                    //Caves
-                    //float simplex = GetSimplexPoint(x +(chunkPos.x * 16) + World.seed, y + (chunkPos.y * 16));
-                    //float width = 16;
-                    //float centre = 128;
-                    //if (worldY < 250 - worldHeightOffset)
+                    //if (worldY < groundLevel[x])
                     //{
-                    //    width -= (250 - worldHeightOffset - worldY) / 3;
-                    //    if (width < 3) width = 0;
+                    //    chunk.tiles[x, y].FgTile = 0;
                     //}
+                    //else if (worldY == groundLevel[x])
+                    //{
+                    //    chunk.tiles[x, y].FgTile = 1;
+                    //    chunk.tiles[x, y].BgTile = 2;
+                    //}
+                    //else if (worldY < groundLevel[x] + 7)
+                    //{
+                    //    chunk.tiles[x, y].FgTile = 2; 
+                    //    chunk.tiles[x, y].BgTile = 2;
+                    //}
+                    //else
+                    //{
+                    //    chunk.tiles[x, y].FgTile = 3;
+                    //    chunk.tiles[x, y].BgTile = 9;
+                    //}
+                    chunk.tiles[x, y].FgTile = (byte)chunk.biomeManager.biomeData[x].palette.GetFgPaletteTile(worldY - groundLevel[x] - 10);
+                    chunk.tiles[x, y].BgTile = (byte)chunk.biomeManager.biomeData[x].palette.GetBgPaletteTile(worldY - groundLevel[x] - 10);
+
                     bool cave = GetCavePresence(x + (chunkPos.x * 16), y + (chunkPos.y * 16));
                     if (cave)
                     {

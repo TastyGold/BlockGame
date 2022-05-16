@@ -11,7 +11,9 @@ namespace BlockGame
         public VecInt2 ChunkPosVec => new VecInt2(chunkPosX, chunkPosY);
         public Tile[,] tiles = new Tile[16, 16];
 
-        public WorldChunkLightingManager lightManager = new WorldChunkLightingManager();
+        public WorldChunkLightingManager lightManager;
+        public WorldChunkBiomeManager biomeManager;
+        public WorldChunkRenderer renderer;
 
         public void PopulateTileArray()
         {
@@ -95,6 +97,12 @@ namespace BlockGame
             return map;
         }
 
+        public WorldChunk GetAdjacentChunk(int offsetX, int offsetY, out bool exists)
+        {
+            WorldChunk chunk = world.GetChunk(ChunkPosVec + new VecInt2(offsetX, offsetY), out exists);
+            return chunk;
+        }
+
         public static void Print2DBoolArray(bool[,] arr)
         {
             for (int y = 0; y < arr.GetLength(1); y++)
@@ -111,13 +119,18 @@ namespace BlockGame
         {
             PopulateTileArray();
             lightManager = new WorldChunkLightingManager() { chunk = this };
+            biomeManager = new WorldChunkBiomeManager() { chunk = this };
+            renderer = new WorldChunkRenderer() { chunk = this } ;
         }
         public WorldChunk(VecInt2 chunkPos)
         {
             chunkPosX = chunkPos.x;
             chunkPosY = chunkPos.y;
+
             PopulateTileArray();
             lightManager = new WorldChunkLightingManager() { chunk = this };
+            biomeManager = new WorldChunkBiomeManager() { chunk = this };
+            renderer = new WorldChunkRenderer() { chunk = this };
         }
     }
 }

@@ -26,6 +26,60 @@ namespace BlockGame
             lights.Add(new WorldLight() { positionX = posX, positionY = posY, r = (byte)luminosity });
         }
 
+        public byte[,] Get18x18Lightmap()
+        {
+            byte[,] map = new byte[18, 18];
+
+            //Corners
+            WorldChunk c = chunk.GetAdjacentChunk(-1, -1, out bool exists);
+            map[0, 0] = exists ? c.lightManager.skylightLevels[15, 15] : lightLevels[0, 0];
+
+            c = chunk.GetAdjacentChunk(+1, -1, out exists);
+            map[17, 0] = exists ? c.lightManager.skylightLevels[0, 15] : lightLevels[15, 0];
+
+            c = chunk.GetAdjacentChunk(-1, +1, out exists);
+            map[0, 17] = exists ? c.lightManager.skylightLevels[15, 0] : lightLevels[0, 15];
+
+            c = chunk.GetAdjacentChunk(+1, +1, out exists);
+            map[17, 17] = exists ? c.lightManager.skylightLevels[0, 0] : lightLevels[15, 15];
+
+            //Edges
+            c = chunk.GetAdjacentChunk(0, -1, out exists);
+            for (int i = 0; i < 16; i++)
+            {
+                map[i + 1, 0] = exists ? c.lightManager.skylightLevels[i, 15] : lightLevels[i, 0];
+            }
+
+            c = chunk.GetAdjacentChunk(0, +1, out exists);
+            for (int i = 0; i < 16; i++)
+            {
+                map[i + 1, 17] = exists ? c.lightManager.skylightLevels[i, 0] : lightLevels[i, 15];
+            }
+
+            c = chunk.GetAdjacentChunk(-1, 0, out exists);
+            for (int i = 0; i < 16; i++)
+            {
+                map[0, i + 1] = exists ? c.lightManager.skylightLevels[15, i] : lightLevels[0, i];
+            }
+
+            c = chunk.GetAdjacentChunk(+1, 0, out exists);
+            for (int i = 0; i < 16; i++)
+            {
+                map[17, i + 1] = exists ? c.lightManager.skylightLevels[0, i] : lightLevels[15, i];
+            }
+
+            //Centre
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    map[x + 1, y + 1] = skylightLevels[x, y];
+                }
+            }
+
+            return map;
+        }
+
         public void CalculateLightLevels()
         {
             for (int y = 0; y < 16; y++)
@@ -157,6 +211,7 @@ namespace BlockGame
             else return chunk.tiles[x, y].FgTile != 0 ? fgTileFalloff : bgTileFalloff;
         }
 
+        //deprecated methods
         public void _CalculateSkylight()
         {
             bool complete = false;

@@ -11,13 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Raylib-cs">
-      <HintPath>..\..\..\..\OneDrive\Desktop\raylib\Raylib-cs-master\Raylib-cs\bin\Debug\netstandard2.1\Raylib-cs.dll</HintPath>
-    </Reference>
+    <Compile Remove="Noise\**" />
+    <EmbeddedResource Remove="Noise\**" />
+    <None Remove="Noise\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Noise\" />
+    <Reference Include="Raylib-cs">
+      <HintPath>..\..\..\..\OneDrive\Desktop\raylib\Raylib-cs-master\Raylib-cs\bin\Debug\netstandard2.1\Raylib-cs.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

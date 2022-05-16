@@ -8,9 +8,10 @@ namespace BlockGame
     public class World
     {
         public const int worldChunkHeight = 32;
+        public static bool enableMapLighting = true;
 
         public static Random rand = new Random();
-        public static int seed = rand.Next(-100000, 100000);
+        public static int seed;
 
         public Dictionary<VecInt2, WorldChunk> chunks = new Dictionary<VecInt2, WorldChunk>();
 
@@ -69,6 +70,11 @@ namespace BlockGame
             {
                 Image i = Raylib.LoadImage("..//..//..//core//assets//tilemapcolors.png");
                 Color* colors = (Color*)Raylib.LoadImageColors(i);
+
+                Raylib.UnloadImage(i);
+                i = Raylib.LoadImage("..//..//..//core//assets//bgtilecolors.png");
+                Color* bgcolors = (Color*)Raylib.LoadImageColors(i);
+
                 //Raylib.ImageDrawRectangle(ref img, 0, WorldGeneration.seaLevel, mapWidth, worldChunkHeight * 16, Color.BLUE);
                 foreach (KeyValuePair<VecInt2, WorldChunk> pair in chunks)
                 {
@@ -76,16 +82,32 @@ namespace BlockGame
                     {
                         for (int x = 0; x < 16; x++)
                         {
-                            if (pair.Value.tiles[x, y].FgTile != 0)
+                            bool hasFg = pair.Value.tiles[x, y].FgTile != 0;
+                            bool hasBg = pair.Value.tiles[x, y].BgTile != 0;
+
+                            if (hasFg || hasBg)
                             {
-                                Color pixelColor = colors[pair.Value.tiles[x, y].FgTile];
-                                int tempR = pixelColor.r * pair.Value.lightManager.skylightLevels[x, y];
-                                int tempG = pixelColor.g * pair.Value.lightManager.skylightLevels[x, y];
-                                int tempB = pixelColor.b * pair.Value.lightManager.skylightLevels[x, y];
-                                tempR /= 255;
-                                tempG /= 255;
-                                tempB /= 255;
-                                pixelColor = new Color(tempR, tempG, tempB, 255);
+                                Color pixelColor = hasFg
+                                    ? colors[pair.Value.tiles[x, y].FgTile]
+                                    : bgcolors[pair.Value.tiles[x, y].BgTile];
+
+                                if (!hasFg)
+                                {
+                                    float tint = 0.6f;
+                                    pixelColor = new Color((int)(pixelColor.r * tint), (int)(pixelColor.g * tint), (int)(pixelColor.b * tint), 255);
+                                }
+
+                                if (enableMapLighting)
+                                {
+                                    int light = pair.Value.lightManager.skylightLevels[x, y];
+                                    int tempR = pixelColor.r * light;
+                                    int tempG = pixelColor.g * light;
+                                    int tempB = pixelColor.b * light;
+                                    tempR /= 255;
+                                    tempG /= 255;
+                                    tempB /= 255;
+                                    pixelColor = new Color(tempR, tempG, tempB, 255);
+                                }
                                 Raylib.ImageDrawPixel(ref img, x + (pair.Key.x - leftmost) * 16, y + pair.Key.y * 16, pixelColor);
                             }
                             else Raylib.ImageDrawPixel(ref img, x + (pair.Key.x - leftmost) * 16, y + pair.Key.y * 16, Color.SKYBLUE);
@@ -162,6 +184,12 @@ namespace BlockGame
                     }
                 }
             }
+        }
+
+        public World()
+        {
+            seed = rand.Next(-100000, 100000);
+            SimplexNoise.Noise.Seed = seed;
         }
     }
 }

@@ -19,9 +19,25 @@
             return new VecInt2(a.x - b.x, a.y - b.y);
         }
 
+        public static bool operator ==(VecInt2 a, VecInt2 b)
+        {
+            return !(a != b);
+        }
+        public static bool operator !=(VecInt2 a, VecInt2 b)
+        {
+            return a.x != b.x || a.y != b.y;
+        }
+        
         public override string ToString()
         {
             return $"<{x}, {y}>";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is VecInt2 @int &&
+                   x == @int.x &&
+                   y == @int.y;
         }
 
         public VecInt2(int x, int y)

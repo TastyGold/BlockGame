@@ -1,4 +1,6 @@
-﻿namespace BlockGame
+﻿using Raylib_cs;
+
+namespace BlockGame
 {
     public static class BlockGameMath
     {
@@ -24,6 +26,12 @@
             }
         }
 
+        public static byte Lerp(byte a, byte b, float t)
+        {
+            if (a == b) return a;
+            else return (byte)(((1 - t) * (float)a) + (t * (float)b));
+        }
+
         public static void Add(this float[,] arr1, float[,] arr2, float multiplier)
         {
             for (int y = 0; y < arr1.GetLength(1); y++)
@@ -33,6 +41,12 @@
                     arr1[x, y] += arr2[x, y] * multiplier;
                 }
             }
+        }
+
+        //Stops texture bleeding by slightly decreasing the height/width
+        public static Rectangle FixBleedingEdge(this Rectangle rec)
+        {
+            return new Rectangle(rec.x + 0.0002f, rec.y + 0.0002f, rec.width - 0.0004f, rec.height - 0.0004f);
         }
     }
 }
