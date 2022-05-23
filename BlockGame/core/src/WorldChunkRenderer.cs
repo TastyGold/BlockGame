@@ -6,16 +6,18 @@ namespace BlockGame
     {
         public WorldChunk chunk;
         public Texture2D lightmapTexture;
+        private bool isTextureLoaded = false;
 
-        public void LoadLightmapTexture()
+        public void LoadSmoothLightmap()
         {
-            Image i = SmoothLightmapGenerator.GetSmoothLightmap(chunk.lightManager.Get18x18Lightmap());
-            lightmapTexture = Raylib.LoadTextureFromImage(i);
-            Raylib.UnloadImage(i);
+            if (isTextureLoaded) Raylib.UnloadTexture(lightmapTexture);
+            lightmapTexture = SmoothLightmapGenerator.GetSmoothLightmap(chunk.lightManager.Get18x18Lightmap()); 
+            isTextureLoaded = true;
         }
 
         public void UnloadLightmapTexture()
         {
+            isTextureLoaded = false;
             Raylib.UnloadTexture(lightmapTexture);
         }
     }

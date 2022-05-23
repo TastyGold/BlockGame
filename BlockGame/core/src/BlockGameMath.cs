@@ -43,6 +43,23 @@ namespace BlockGame
             }
         }
 
+        public static T[,] Duplicate<T>(this T[,] arr)
+        {
+            int w = arr.GetLength(0);
+            int h = arr.GetLength(1);
+            T[,] newArray = new T[w, h];
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    newArray[x, y] = arr[x, y];
+                }
+            }
+
+            return newArray;
+        }
+
         //Stops texture bleeding by slightly decreasing the height/width
         public static Rectangle FixBleedingEdge(this Rectangle rec)
         {

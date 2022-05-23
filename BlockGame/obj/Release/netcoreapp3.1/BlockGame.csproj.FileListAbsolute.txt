@@ -1,0 +1,14 @@
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.csprojAssemblyReference.cache
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.AssemblyInfoInputs.cache
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.AssemblyInfo.cs
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.exe
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.deps.json
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.runtimeconfig.json
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.runtimeconfig.dev.json
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.dll
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\BlockGame.pdb
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\Raylib-cs.dll
+C:\Users\finle\source\repos\BlockGame\BlockGame\bin\Release\netcoreapp3.1\Raylib-cs.pdb
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.csproj.CopyComplete
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.dll
+C:\Users\finle\source\repos\BlockGame\BlockGame\obj\Release\netcoreapp3.1\BlockGame.pdb

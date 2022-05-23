@@ -23,6 +23,8 @@ namespace BlockGame
             BiomeBlockPalette b = WorldBiomes.defaultPalette;
             Console.WriteLine((int)b.GetFgPaletteTile(100));
             Raylib.InitWindow(1600, 900, "Hello World");
+            Raylib.SetTargetFPS(120);
+            TextureGenerationDiagnostics.Test();
             World world = new World();
             WorldBiomeGeneration.LoadValueSheet();
             WorldBiomes.Load();
@@ -40,10 +42,10 @@ namespace BlockGame
             ampTexture = Raylib.LoadTexture("..//..//..//core//assets//amplitudeMap.png");
             circle18x = Raylib.LoadTexture("..//..//..//core//assets//18x18circle.png");
 
-            WorldChunk target = world.chunks[new VecInt2(0, 9)];
-            target.lightManager = new WorldChunkLightingManager();
-            target.lightManager.chunk = target;
-            target.lightManager.CalculateSkylight();
+            //WorldChunk target = world.chunks[new VecInt2(0, 9)];
+            //target.lightManager = new WorldChunkLightingManager();
+            //target.lightManager.chunk = target;
+            //target.lightManager.CalculateSkylight();
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -75,11 +77,24 @@ namespace BlockGame
                 VecInt2 mousePos = new VecInt2((mouse.X / 16).FloorToInt(), (mouse.Y / 16).FloorToInt());
                 if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                 {
-                    if (!Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT)) world.SetTile(mousePos, false, 0);
-                    else world.SetTile(mousePos, true, Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_ALT) ? (byte)8 : (byte)0);
                     WorldChunkLightingManager l = world.chunks[new VecInt2(TileToChunkCoord(mousePos.x), TileToChunkCoord(mousePos.y))].lightManager;
-                    l.CalculateSkylight();
-                    l.CallNeighborSkylightCalc();
+
+                    if (!Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
+                    {
+                        if (!Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_ALT))
+                        {
+                            world.SetTile(mousePos, false, 0);
+                        }
+                        else
+                        {
+                            world.SetTile(mousePos, false, 2);
+                        }
+                    }
+                    else world.SetTile(mousePos, true, Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_ALT) ? (byte)8 : (byte)0);
+
+                    l.UpdateLightmap();
+
+                    List<WorldChunk> updates = new List<WorldChunk>();
                     for (int y = -1; y <= 1; y++)
                     {
                         for (int x = -1; x <= 1; x++)
@@ -87,16 +102,21 @@ namespace BlockGame
                             WorldChunk chunk = world.GetChunk(l.chunk.ChunkPosVec + new VecInt2(x, y), out _);
                             if (WorldRenderer.loadedChunks.Contains(chunk))
                             {
-                                WorldRenderer.UnloadChunk(chunk);
-                                WorldRenderer.LoadChunk(chunk);
+                                updates.Add(chunk);
                             }
                         }
                     }
+                    world.lightingManager.CalculateSmoothLightmaps(updates);
+                }
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_V))
+                {
+                    WorldChunkLightingManager l = world.chunks[new VecInt2(TileToChunkCoord(mousePos.x), TileToChunkCoord(mousePos.y))].lightManager;
+                    l.DisplayLightmapInConsole();
                 }
                 if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
                 {
                     WorldChunkLightingManager l = world.chunks[new VecInt2(TileToChunkCoord(mousePos.x), TileToChunkCoord(mousePos.y))].lightManager;
-                    Console.WriteLine(l.skylightLevels[Modulo(mousePos.x, 16), Modulo(mousePos.y, 16)]);
+                    Console.WriteLine(l.blendedSkylightLevels[Modulo(mousePos.x, 16), Modulo(mousePos.y, 16)]);
                 }
                 if (Raylib.IsKeyPressed(KeyboardKey.KEY_M))
                 {
@@ -118,14 +138,25 @@ namespace BlockGame
                 {
                     if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
                     {
-                        Raylib.ExportImage(SmoothLightmapGenerator.GetSmoothLightmap(world.GetChunk(camChunk, out _).lightManager.Get18x18Lightmap()), "..//..//..//chunkLightmapExport.png");
+                        //Raylib.ExportImage(SmoothLightmapGenerator.GetSmoothLightmap(world.GetChunk(camChunk, out _).lightManager.Get18x18Lightmap()), "..//..//..//chunkLightmapExport.png");
                         Raylib.ExportImage(SmoothLightmapGenerator.GetBasicLightmapImage(world.GetChunk(camChunk, out _).lightManager.Get18x18Lightmap()), "..//..//..//chunkLightmapBasicExport.png");
                     }
                     else
                     {
-                        WorldRenderer.enableLighting = !WorldRenderer.enableLighting;
-                        World.enableMapLighting = !World.enableMapLighting;
+                        if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
+                        {
+                            Settings.enableSmoothLighting = !Settings.enableSmoothLighting;
+                        }
+                        else
+                        {
+                            Settings.enableLighting = !Settings.enableLighting;
+                            World.enableMapLighting = !World.enableMapLighting;
+                        }
                     }
+                }
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_O))
+                {
+                    Settings.drawChunkOutline = !Settings.drawChunkOutline;
                 }
 
                 Raylib.BeginDrawing();
@@ -135,7 +166,7 @@ namespace BlockGame
 
                 //world.DrawRange(camChunk.x - Settings.renderDistanceX, camChunk.y - Settings.renderDistanceY, 1 + (Settings.renderDistanceX * 2), 1 + (Settings.renderDistanceY * 2));
                 WorldRenderer.DrawLoadedChunks();
-                //world.OutlineChunk(camChunk.x, camChunk.y);
+                if (Settings.drawChunkOutline) world.OutlineChunk(camChunk.x, camChunk.y);
                 Raylib.DrawRectangle(mousePos.x * 16, mousePos.y * 16, 16, 16, Color.RED);
                 //Raylib.DrawRectangle((cam.target.X / 16).FloorToInt() * 16, 0, 16, 512 * 16, new Color(255, 0, 0, 100));
 

@@ -7,6 +7,8 @@ namespace BlockGame
 {
     public class World
     {
+        public WorldLightingManager lightingManager;
+
         public const int worldChunkHeight = 32;
         public static bool enableMapLighting = true;
 
@@ -49,7 +51,7 @@ namespace BlockGame
             else
             {
                 found = false;
-                return new WorldChunk();
+                return null;
             }
         }
 
@@ -99,7 +101,7 @@ namespace BlockGame
 
                                 if (enableMapLighting)
                                 {
-                                    int light = pair.Value.lightManager.skylightLevels[x, y];
+                                    int light = pair.Value.lightManager.localSkylightLevels[x, y];
                                     int tempR = pixelColor.r * light;
                                     int tempG = pixelColor.g * light;
                                     int tempB = pixelColor.b * light;
@@ -148,13 +150,17 @@ namespace BlockGame
                     AddChunk(c);
                 }
             }
-            for (int i = 0; i < 2; i++)
+            foreach (WorldChunk chunk in chunks.Values)
             {
-                foreach (WorldChunk chunk in chunks.Values)
-                {
-                    chunk.lightManager.CalculateSkylight();
-                }
+                chunk.lightManager.UpdateLightmap();
             }
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    foreach (WorldChunk chunk in chunks.Values)
+            //    {
+            //        chunk.lightManager.CalculateSkylight();
+            //    }
+            //}
         }
 
         public void DrawAll()
@@ -190,6 +196,7 @@ namespace BlockGame
         {
             seed = rand.Next(-100000, 100000);
             SimplexNoise.Noise.Seed = seed;
+            lightingManager = new WorldLightingManager(this);
         }
     }
 }
