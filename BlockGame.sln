@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlockGame", "BlockGame\BlockGame.csproj", "{C79A44B6-6CB5-4837-BAA8-F0027D5B4A94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiomeLevelsGenerator", "BiomeLevelsGenerator\BiomeLevelsGenerator.csproj", "{87406AEB-CCD4-4A23-85CA-C0B0A88EC890}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiomeLevelsGenerator", "BiomeLevelsGenerator\BiomeLevelsGenerator.csproj", "{87406AEB-CCD4-4A23-85CA-C0B0A88EC890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomAccessFilesTesting", "RandomAccessFilesTesting\RandomAccessFilesTesting.csproj", "{F34396F1-E68C-419D-864C-555662F022FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{87406AEB-CCD4-4A23-85CA-C0B0A88EC890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87406AEB-CCD4-4A23-85CA-C0B0A88EC890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87406AEB-CCD4-4A23-85CA-C0B0A88EC890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F34396F1-E68C-419D-864C-555662F022FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F34396F1-E68C-419D-864C-555662F022FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F34396F1-E68C-419D-864C-555662F022FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F34396F1-E68C-419D-864C-555662F022FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

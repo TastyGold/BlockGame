@@ -1,0 +1,11 @@
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\obj\Debug\netcoreapp3.1\RandomAccessFilesTesting.AssemblyInfoInputs.cache
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\obj\Debug\netcoreapp3.1\RandomAccessFilesTesting.AssemblyInfo.cs
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.exe
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.deps.json
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.runtimeconfig.json
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.runtimeconfig.dev.json
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.dll
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\bin\Debug\netcoreapp3.1\RandomAccessFilesTesting.pdb
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\obj\Debug\netcoreapp3.1\RandomAccessFilesTesting.dll
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\obj\Debug\netcoreapp3.1\RandomAccessFilesTesting.pdb
+C:\Users\finle\source\repos\BlockGame\RandomAccessFilesTesting\obj\Debug\netcoreapp3.1\RandomAccessFilesTesting.csprojAssemblyReference.cache
