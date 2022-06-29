@@ -45,7 +45,7 @@ namespace BlockGame.Rendering
                         {
                             if (tiles[x + neighbourOffsetX[n], y + neighbourOffsetY[n]] == true)
                             {
-                                texId += 1 << n;
+                                texId |= 1 << n;
                             }
                         }
 
