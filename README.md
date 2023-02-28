@@ -1,2 +1,2 @@
 # BlockGame
-Project that I am working on currently
+2D terrain generation and procedural lighting
